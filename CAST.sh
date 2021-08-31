@@ -43,6 +43,13 @@ git_update() {
 git_update /var/cast
 
 sudo chmod +x *
+
+if test -f "/var/cast/update.sh"; then
+	sudo /var/cast/upcast.sh
+fi
+
+
+
 cp /var/cast/*.sh /usr/local/sbin
 
 
