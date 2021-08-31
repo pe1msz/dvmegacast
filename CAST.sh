@@ -2,7 +2,7 @@
 #bash
 
 sudo chmod +x *
-cp *.sh /usr/local/sbin
+cp /var/cast/*.sh /usr/local/sbin
 
 
 
