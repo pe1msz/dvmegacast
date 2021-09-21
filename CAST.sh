@@ -1,5 +1,7 @@
-#bin
-#bash
+#! /bin/bash
+
+sudo mount -o remount,rw /
+
 
 git_checkUpdateRequired() {
 	# Set the function variables
