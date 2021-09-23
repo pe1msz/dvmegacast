@@ -14,7 +14,7 @@ git_checkUpdateRequired() {
 
 	# Return the output
 	if [[ ${gitStatusRemote} != ${gitStatusLocal} ]]; then
-		echo "1"
+		echo "0"
 	else
 		echo "0"
 	fi
@@ -35,13 +35,6 @@ git_update() {
 git_update /var/cast
 
 sudo chmod +x *
-echo "test123"
-if test -f "/var/cast/update.sh"; then
-	sudo /var/cast/upcast.sh
-echo 'test';
-fi
-
-
 
 cp /var/cast/*.sh /usr/local/sbin
 
