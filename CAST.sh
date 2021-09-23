@@ -23,16 +23,6 @@ git_checkUpdateRequired() {
 git_update() {
 	# Set the function variables
 	gitFolder=${1}
-
-	# Handle the special case for /usr/loca/sbin
-	#if [[ ${gitFolder} == "/usr/local/sbin" ]]; then
-		# Assume unchanged for pistar-upnp.service
-	#	git --work-tree=${gitFolder} --git-dir=${gitFolder}/.git update-index --assume-unchanged pistar-upnp.service
-	#fi
-	#if [[ ${gitFolder} == "/var/www/dashboard" ]]; then
-	#	# Assume unchanged for pistar-upnp.service
-	#	git --work-tree=${gitFolder} --git-dir=${gitFolder}/.git update-index --assume-unchanged config/ircddblocal.php
-	#fi
 	
 	if [[ $(git_checkUpdateRequired ${gitFolder}) -gt 0 ]]; then
 		echo "Updating ${gitFolder}..."
@@ -45,9 +35,10 @@ git_update() {
 git_update /var/cast
 
 sudo chmod +x *
-
+echo "test123"
 if test -f "/var/cast/update.sh"; then
 	sudo /var/cast/upcast.sh
+echo 'test';
 fi
 
 

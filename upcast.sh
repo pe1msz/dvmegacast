@@ -3,10 +3,10 @@
 
 sudo mount -o remount,rw /
 
-sudo cp confirm_main.html /var/www/dashboard/admin/fw
-sudo cp confirm_radio.html /var/www/dashboard/admin/fw
-sudo cp confirm_display.html /var/www/dashboard/admin/fw
-sudo cp index.php /var/www/dashboard/admin/fw
-sudo cp configure.php /var/www/dashboard/admin
-sudo cp header-menu.inc /var/www/dashboard/admin/expert
-sudo unzip -o lang.zip -d /var/www/dashboard/admin/lang
+sudo cp /var/cast/confirm_main.html /var/www/dashboard/admin/fw
+sudo cp /var/cast/confirm_radio.html /var/www/dashboard/admin/fw
+sudo cp /var/cast/confirm_display.html /var/www/dashboard/admin/fw
+sudo cp /var/cast/index.php /var/www/dashboard/admin/fw
+sudo cp /var/cast/configure.php /var/www/dashboard/admin
+sudo cp /var/cast/header-menu.inc /var/www/dashboard/admin/expert
+sudo unzip -o /var/cast/lang.zip -d /var/www/dashboard/admin/lang
