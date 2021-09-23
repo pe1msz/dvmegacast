@@ -3,6 +3,7 @@
 
 sudo mount -o remount,rw /
 
+sudo cp /var/cast/check_update.php /var/www/dashboard/admin/fw
 sudo cp /var/cast/confirm_main.html /var/www/dashboard/admin/fw
 sudo cp /var/cast/confirm_radio.html /var/www/dashboard/admin/fw
 sudo cp /var/cast/confirm_display.html /var/www/dashboard/admin/fw
