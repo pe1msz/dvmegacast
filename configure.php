@@ -248,7 +248,7 @@ if ( ($configPistarRelease['Pi-Star']['Version'] >= "4.1") && ($configPistarRele
  <a href="/admin/power.php" style="color: #ffffff;"><?php echo $lang['power'];?></a> |
  <a href="/admin/update.php" style="color: #ffffff;"><?php echo $lang['update'];?></a> |
  <a href="/admin/config_backup.php" style="color: #ffffff;"><?php echo $lang['backup_restore'];?></a> 
-</p>
+ </p>
 </div>
 <div class="contentwide">
 <?php
@@ -832,7 +832,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $rollSTARNETSERVERirc = 'sudo sed -i "/ircddbUsername=/c\\ircddbUsername='.$newCallsignUpperIRC.'" /etc/starnetserver';
 
 	  // Only roll ircDDBGateway Username if using OpenQuad
-	  if ( ($configs['ircddbHostname'] == "rr.openquad.net") || ($configs['ircddbHostname'] == "ircv4.openquad.net") ) {
+	  if (strpos($configs['ircddbHostname'], 'openquad.net') !== false) {
 		  $rollIRCUSER = 'sudo sed -i "/ircddbUsername=/c\\ircddbUsername='.$newCallsignUpperIRC.'" /etc/ircddbgateway';
 		  system($rollIRCUSER);
 	  }
