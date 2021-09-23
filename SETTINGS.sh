@@ -39,6 +39,7 @@
 
 
  	sudo sed -i "/\[General\]/,/\[/ s/Callsign=.*$/Callsign=$1/1" /etc/mmdvmhost
+	sudo sed -i "s/callsign=.*/callsign=\'$1\';/1" /var/www/dashboard/config/ircddblocal.php
 	sudo sed -i "/\[FM\]/,/\[/ s/Callsign=.*$/Callsign=$1/1" /etc/mmdvmhost
 	sudo sed -i "s/gatewayCallsign=.*/gatewayCallsign=$1/1" /etc/ircddbgateway
 	sudo sed -i "s/repeaterCall1=.*/repeaterCall1=$1/1" /etc/ircddbgateway
