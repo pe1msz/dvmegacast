@@ -30,15 +30,19 @@
 	sudo systemctl stop dapnetgateway.service > /dev/null 2>/dev/null &
 	sudo systemctl stop castserial.service > /dev/null 2>/dev/null &
 
-#  sudo sed -i "/dvmegaPort=/c\\dvmegaPort=/dev/ttyS2" /etc/dstarrepeater
+
 
 # Here we edit the files we need, and restart
-sudo sed -i "s%.*Hardware=dvmpicasthd.*%Hardware=dvmpicast%" /etc/dstar-radio.mmdvmhost
-sudo sed -i "s%.*Hardware=dvmpicasths.*%Hardware=dvmpicast%" /etc/dstar-radio.mmdvmhost
-# Both models are equal for this
-sudo sed -i "s%Port=/dev/ttyS2%Port=/dev/ttyAMA0%1" /etc/mmdvmhost
+
+sudo sed -i "/dvmegaPort=/c\\dvmegaPort=\/dev\/ttyAMA0" /etc/dstarrepeater
+
+# Here we edit the files we need, and restart
+sudo sed -i "/\[Modem\]/,/\[/ s/Hardware=.*$/Hardware=dvmpicast/1" /etc/dstar-radio.mmdvmhost
+sudo sed -i "/\[Modem\]/,/\[/ s/Port=.*$/Port=\/dev\/ttyAMA0/1" /etc/mmdvmhost
 sudo sed -i "/dvmegaVariant=/c\\dvmegaVariant=2" /etc/dstarrepeater
 sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway
+
+
 sudo cast-reset
 
 
