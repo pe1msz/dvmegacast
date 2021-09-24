@@ -1,0 +1,107 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+# AutoGenerate SSH keys if they are missing
+if [ ! -f /etc/ssh/ssh_host_rsa_key ] || [ ! -f /etc/ssh/ssh_host_dsa_key ]; then
+	mount -o remount,rw /
+	dpkg-reconfigure openssh-server
+	ldconfig
+fi
+
+# Re-link the first serial port to /dev/ttyAMA0
+if [ ! -f /dev/ttyAMA0 ]; then
+	mount -o remount,rw /
+	ln -s /dev/ttyS1 /dev/ttyAMA0
+fi
+
+# If this is a new image, expand the filesystem
+if [ ! -f /boot/.expanded ]; then
+	mount -o remount,rw /boot
+	mount -o remount,rw /
+	touch /boot/.expanded
+	/usr/local/sbin/pistar-expand
+	sync
+	sync
+	sync
+	reboot
+	exit 0
+fi
+
+# Pull in the Config settings from /boot if they exist there
+if [ -f /boot/Pi-Star_Config_*.zip ]; then
+	/usr/local/sbin/pistar-bootconfig.sh
+	exit 0
+fi
+
+# Pull in the WiFi settings from /boot if they exist there
+if [ -f /boot/wpa_supplicant.conf ]; then
+        mount -o remount,rw /boot
+        mount -o remount,rw /
+        mv /boot/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+        wpa_cli reconfigure wlan0
+        reboot
+	exit 0
+fi
+
+if [ ! -d /var/log/unattended-upgrades ]; then
+	mkdir -p /var/log/unattended-upgrades
+fi
+
+# Print the IP address
+_IP=$(hostname -I) || true
+if [ "$_IP" ]; then
+  #Sync the clock
+  mount -o remount,rw /
+  flock -n /run/lock/ntpdate /usr/sbin/ntpdate-debian -s -b 2>/dev/null &
+fi
+
+# Update the Kernel version in /etc/pistar-release
+_KernelVer=`uname -r`
+_MMDVMHostVer=`MMDVMHost -v | awk '{ print $3 }'`
+mount -o remount,rw /
+sed -i "/kernel/c kernel = $_KernelVer" /etc/pistar-release
+sed -i "/MMDVMHost/c MMDVMHost = $_MMDVMHostVer" /etc/pistar-release
+# Generate /etc/motd
+/usr/local/sbin/pistar-motdgen
+
+
+
+# castserialnew
+sudo systemctl start castserial.service
+# castudp
+sudo systemctl start castudp.service
+
+
+# set the gpio to in on pin 10
+sudo gpio mode 10 in
+
+
+# Shuffle the time for the daily crontab jobs
+cronMins=$(shuf -i 0-59 -n 1)
+cronHours=$(shuf -i 3-4 -n1)
+mount -o remount,rw /
+sed -i "/cron.daily/c ${cronMins} ${cronHours}	* * *	root	mount -o remount,rw / && cd / && run-parts --report /etc/cron.daily" /etc/crontab
+
+# Set Ondemand Scheduler
+echo ondemand | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor >/dev/null 2>&1
+sleep 0.1
+cd /sys/devices/system/cpu
+for i in cpufreq/ondemand cpu0/cpufreq/ondemand cpu4/cpufreq/ondemand ; do
+	if [ -d $i ]; then
+		echo 1 >${i}/io_is_busy
+		echo 25 >${i}/up_threshold
+		echo 10 >${i}/sampling_down_factor
+	fi
+done
+
+exit 0
