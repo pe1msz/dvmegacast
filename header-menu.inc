@@ -10,6 +10,7 @@
     <a href="/admin/configure.php" style="color: #ffffff;"><?php echo $lang['configuration'];?></a> |
     <a href="/admin/fw/index.php" style="color: #ffffff;"><?php echo $lang['fw'];?></a> |
     <a href="/admin/memlist/memlist.php" style="color: #ffffff;"><?php echo $lang['mem_list'];?></a>
+
   </p>
   <p style="padding-right: 5px; text-align: right; color: #ffffff;">
     <b>Quick Edit:</b>
