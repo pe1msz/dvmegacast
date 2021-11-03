@@ -71,6 +71,12 @@ if (file_exists('/etc/ysf2p25')) {
 	if (fopen($ysf2p25ConfigFile,'r')) { $configysf2p25 = parse_ini_file($ysf2p25ConfigFile, true); }
 }
 
+// Load the dgidgateway config file
+if (file_exists('/etc/dgidgateway')) {
+	$dgidgatewayConfigFile = '/etc/dgidgateway';
+	if (fopen($dgidgatewayConfigFile,'r')) { $configdgidgateway = parse_ini_file($dgidgatewayConfigFile, true); }
+}
+
 // Load the dmr2ysf config file
 if (file_exists('/etc/dmr2ysf')) {
 	$dmr2ysfConfigFile = '/etc/dmr2ysf';
@@ -247,7 +253,8 @@ if ( ($configPistarRelease['Pi-Star']['Version'] >= "4.1") && ($configPistarRele
  <a href="/admin/expert/" style="color: #ffffff;">Expert</a> |
  <a href="/admin/power.php" style="color: #ffffff;"><?php echo $lang['power'];?></a> |
  <a href="/admin/update.php" style="color: #ffffff;"><?php echo $lang['update'];?></a> |
- <a href="/admin/config_backup.php" style="color: #ffffff;"><?php echo $lang['backup_restore'];?></a> 
+ <a href="/admin/config_backup.php" style="color: #ffffff;"><?php echo $lang['backup_restore'];?></a> |
+ <a href="javascript:factoryReset();" style="color: #ffffff;"><?php echo $lang['factory_reset'];?></a>
 </p>
 </div>
 <div class="contentwide">
@@ -469,6 +476,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configysf2dmr['Info']['Latitude'] = $newConfLatitude;
 	  $configysf2nxdn['Info']['Latitude'] = $newConfLatitude;
 	  $configysf2p25['Info']['Latitude'] = $newConfLatitude;
+	  if (isset($configdgidgateway)) { $configdgidgateway['Info']['Latitude'] = $newConfLatitude; }
 	  $configdmrgateway['Info']['Latitude'] = $newConfLatitude;
 	  $confignxdngateway['Info']['Latitude'] = $newConfLatitude;
 	  system($rollConfLat0);
@@ -485,6 +493,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configysf2dmr['Info']['Longitude'] = $newConfLongitude;
 	  $configysf2nxdn['Info']['Longitude'] = $newConfLongitude;
 	  $configysf2p25['Info']['Longitude'] = $newConfLongitude;
+	  if (isset($configdgidgateway)) { $configdgidgateway['Info']['Longitude'] = $newConfLongitude; }
 	  $configdmrgateway['Info']['Longitude'] = $newConfLongitude;
 	  $confignxdngateway['Info']['Longitude'] = $newConfLongitude;
 	  system($rollConfLon0);
@@ -515,6 +524,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configdmrgateway['Info']['Description'] = '"'.$newConfDesc2.'"';
           $configysfgateway['Info']['Description'] = '"'.$newConfDesc2.'"';
 	  $confignxdngateway['Info']['Description'] = '"'.$newConfDesc2.'"';
+	  if (isset($configdgidgateway)) { $configdgidgateway['Info']['Description'] = '"'.$newConfDesc2.'"'; }
 	  system($rollDesc2);
 	  system($rollDesc22);
 	  }
@@ -643,6 +653,9 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configysf2p25['Info']['RXFrequency'] = $newFREQrx;
 	  $configysf2p25['Info']['TXFrequency'] = $newFREQtx;
 	  $configysf2p25['YSF Network']['Suffix'] = "RPT";
+	  if (isset($configdgidgateway)) { $configdgidgateway['Info']['RXFrequency'] = $newFREQrx; }
+	  if (isset($configdgidgateway)) { $configdgidgateway['Info']['TXFrequency'] = $newFREQtx; }
+	  if (isset($configdgidgateway)) { $configdgidgateway['General']['Suffix'] = "RPT"; }
 	  $configdmr2ysf['YSF Network']['Suffix'] = "RPT";
 	  $confignxdngateway['Info']['RXFrequency'] = $newFREQrx;
 	  $confignxdngateway['Info']['TXFrequency'] = $newFREQtx;
@@ -746,6 +759,9 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configysf2p25['Info']['RXFrequency'] = $newFREQ;
 	  $configysf2p25['Info']['TXFrequency'] = $newFREQ;
 	  $configysf2p25['YSF Network']['Suffix'] = "ND";
+	  if (isset($configdgidgateway)) { $configdgidgateway['Info']['RXFrequency'] = $newFREQ; }
+	  if (isset($configdgidgateway)) { $configdgidgateway['Info']['TXFrequency'] = $newFREQ; }
+	  if (isset($configdgidgateway)) { $configdgidgateway['General']['Suffix'] = "ND"; }
 	  $configdmr2ysf['YSF Network']['Suffix'] = "ND";
 	  $confignxdngateway['Info']['RXFrequency'] = $newFREQ;
 	  $confignxdngateway['Info']['TXFrequency'] = $newFREQ;
@@ -861,6 +877,8 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configysf2dmr['Info']['Description'] = $newCallsignUpper."_Pi-Star";
 	  $configysf2nxdn['Info']['Description'] = $newCallsignUpper."_Pi-Star";
 	  $configysf2p25['Info']['Description'] = $newCallsignUpper."_Pi-Star";
+	  if (isset($configdgidgateway)) { $configdgidgateway['General']['Callsign'] = $newCallsignUpper; }
+	  if (isset($configdgidgateway)) { $configdgidgateway['Info']['Description'] = $newCallsignUpper."_Pi-Star"; }
 	  if ($configPistarRelease['Pi-Star']['Version'] >= "4.1.4") {
 	    $rollAPRSGatewayCallsign = 'sudo sed -i "/Callsign=/c\\Callsign='.$newCallsignUpper.'" /etc/aprsgateway';
 	    system($rollAPRSGatewayCallsign);
@@ -968,7 +986,12 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		}
 	  	else {
 			$configysfgateway['Network']['Startup'] = $newYSFStartupHostArr[1];
-			$configdmr2ysf['DMR Network']['DefaultDstTG'] = str_replace("FCS", "1", $newYSFStartupHostArr[0]);
+			if (substr( $newYSFStartupHostArr[0], 0, 3 ) !== "FCS") {
+				$configdmr2ysf['DMR Network']['DefaultDstTG'] = $newYSFStartupHostArr[0];
+			} else {
+				$configdmr2ysf['DMR Network']['DefaultDstTG'] = "9";
+			}
+			//$configdmr2ysf['DMR Network']['DefaultDstTG'] = str_replace("FCS", "1", $newYSFStartupHostArr[0]);
 		}
 	  } else {
 	  	if ($newYSFStartupHostArr[0] == "none") {
@@ -977,7 +1000,12 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		}
 	  	else {
 			$configysfgateway['Network']['Startup'] = $newYSFStartupHostArr[0];
-			$configdmr2ysf['DMR Network']['DefaultDstTG'] = str_replace("FCS", "1", $newYSFStartupHostArr[0]);
+			if (substr( $newYSFStartupHostArr[0], 0, 3 ) !== "FCS") {
+				$configdmr2ysf['DMR Network']['DefaultDstTG'] = $newYSFStartupHostArr[0];
+			} else {
+				$configdmr2ysf['DMR Network']['DefaultDstTG'] = "9";
+			}
+			//$configdmr2ysf['DMR Network']['DefaultDstTG'] = str_replace("FCS", "1", $newYSFStartupHostArr[0]);
 		}
 	  }
 	}
@@ -1084,6 +1112,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	  $configdmrgateway['XLX Network']['Id'] = $newPostDmrId;
 	  $configdmr2ysf['DMR Network']['Id'] = $newPostDmrId;
 	  $configdmr2nxdn['DMR Network']['Id'] = $newPostDmrId;
+	  if (isset($configdgidgateway)) { $configdgidgateway['General']['Id'] = $newPostDmrId; }
 	}
 
 	// Set DMR Extended ID
@@ -1333,9 +1362,17 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	// Set YSF Hang Timers
 	if (empty($_POST['ysfRfHangTime']) != TRUE ) {
 	  $configmmdvm['System Fusion']['ModeHang'] = preg_replace('/[^0-9]/', '', $_POST['ysfRfHangTime']);
+	  if (isset($configdgidgateway)) { $configdgidgateway['General']['RFHangTime'] = preg_replace('/[^0-9]/', '', $_POST['ysfRfHangTime']); }
+	  if (isset($configdgidgateway)) { $configdgidgateway['YSF Network']['RFHangTime'] = preg_replace('/[^0-9]/', '', $_POST['ysfRfHangTime']); }
+	  if (isset($configdgidgateway)) { $configdgidgateway['FCS Network']['RFHangTime'] = preg_replace('/[^0-9]/', '', $_POST['ysfRfHangTime']); }
+	  if (isset($configdgidgateway)) { $configdgidgateway['IMRS Network']['RFHangTime'] = preg_replace('/[^0-9]/', '', $_POST['ysfRfHangTime']); }
 	}
 	if (empty($_POST['ysfNetHangTime']) != TRUE ) {
 	  $configmmdvm['System Fusion Network']['ModeHang'] = preg_replace('/[^0-9]/', '', $_POST['ysfNetHangTime']);
+	  if (isset($configdgidgateway)) { $configdgidgateway['General']['NetHangTime'] = preg_replace('/[^0-9]/', '', $_POST['ysfNetHangTime']); }
+	  if (isset($configdgidgateway)) { $configdgidgateway['YSF Network']['NetHangTime'] = preg_replace('/[^0-9]/', '', $_POST['ysfNetHangTime']); }
+	  if (isset($configdgidgateway)) { $configdgidgateway['FCS Network']['NetHangTime'] = preg_replace('/[^0-9]/', '', $_POST['ysfNetHangTime']); }
+	  if (isset($configdgidgateway)) { $configdgidgateway['IMRS Network']['NetHangTime'] = preg_replace('/[^0-9]/', '', $_POST['ysfNetHangTime']); }
 	}
 	// Set P25 Hang Timers
 	if (empty($_POST['p25RfHangTime']) != TRUE ) {
@@ -2561,6 +2598,18 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	if (!isset($configysf2p25['YSF Network']['DT1'])) { $configysf2p25['YSF Network']['DT1'] = "1,34,97,95,43,3,17,0,0,0"; }
 	if (!isset($configysf2p25['YSF Network']['DT2'])) { $configysf2p25['YSF Network']['DT2'] = "0,0,0,0,108,32,28,32,3,8"; }
 
+	// Defaults for DGIdGateway
+	if (isset($configdgidgateway)) {
+		$configdgidgateway['General']['LocalPort'] = $configmmdvm['System Fusion Network']['GatewayPort'];
+		$configdgidgateway['General']['RptPort'] =  $configmmdvm['System Fusion Network']['LocalPort'];
+		$configdgidgateway['Log']['DisplayLevel'] = 1; 
+		$configdgidgateway['Log']['FileLevel'] = 1;
+		$configdgidgateway['Log']['FilePath'] = "/var/log/pi-star";
+		$configdgidgateway['Log']['FileRoot'] = "DGIdGateway";
+		$configdgidgateway['Log']['FileRotate'] = 0;
+		$configdgidgateway['YSF Network']['Hosts'] = "/usr/local/etc/YSFHosts.txt";
+	}
+
 	// Clean up for NXDN Gateway
 	if (file_exists('/etc/nxdngateway')) {
 		if (isset($confignxdngateway['Network']['HostsFile'])) {
@@ -3051,6 +3100,44 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
                         exec('sudo chown root:root /etc/ysf2p25');                              // Set the owner
                 }
         }
+
+	// dgidgateway config file wrangling
+	if (isset($configdgidgateway)) {
+		$dgidgatewayContent = "";
+		foreach($configdgidgateway as $dgidgatewaySection=>$dgidgatewayValues) {
+			// UnBreak special cases
+			$dgidgatewaySection = str_replace("_", " ", $dgidgatewaySection);
+			$dgidgatewayContent .= "[".$dgidgatewaySection."]\n";
+			// append the values
+			foreach($dgidgatewayValues as $dgidgatewayKey=>$dgidgatewayValue) {
+				$dgidgatewayContent .= $dgidgatewayKey."=".$dgidgatewayValue."\n";
+				}
+				$dgidgatewayContent .= "\n";
+			}
+		if (!$handleDGIdGatewayConfig = fopen('/tmp/cu0G4tG3CA45Z9B.tmp', 'w')) {
+			return false;
+		}
+		if (!is_writable('/tmp/cu0G4tG3CA45Z9B.tmp')) {
+		  echo "<br />\n";
+		  echo "<table>\n";
+		  echo "<tr><th>ERROR</th></tr>\n";
+		  echo "<tr><td>Unable to write configuration file(s)...</td><tr>\n";
+		  echo "<tr><td>Please wait a few seconds and retry...</td></tr>\n";
+		  echo "</table>\n";
+		  unset($_POST);
+		  echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},5000);</script>';
+		  die();
+		}
+		else {
+			$success = fwrite($handleDGIdGatewayConfig, $dgidgatewayContent);
+			fclose($handleDGIdGatewayConfig);
+			if (intval(exec('cat /tmp/cu0G4tG3CA45Z9B.tmp | wc -l')) > 25 ) {
+				exec('sudo mv /tmp/cu0G4tG3CA45Z9B.tmp /etc/dgidgateway');		// Move the file back
+				exec('sudo chmod 644 /etc/dgidgateway');				// Set the correct runtime permissions
+				exec('sudo chown root:root /etc/dgidgateway');				// Set the owner
+			}
+		}
+	}
 
 	// dmr2ysf config file wrangling
         $dmr2ysfContent = "";
@@ -3549,8 +3636,8 @@ else:
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['mmdvm_display'];?>:<span><b>Display Type</b>Choose your display type, if you have one.</span></a></td>
     <td align="left" colspan="2"><select name="mmdvmDisplayType">
 	    <option <?php if (($configmmdvm['General']['Display'] == "None") || ($configmmdvm['General']['Display'] == "") ) {echo 'selected="selected" ';}; ?>value="None">None</option>
-	    <option <?php if ($configmmdvm['General']['Display'] == "CAST") {echo 'selected="selected" ';}; ?>value="CAST">CAST</option>
 	    <option <?php if (($configmmdvm['General']['Display'] == "OLED") && ($configmmdvm['OLED']['Type'] == "3")) {echo 'selected="selected" ';}; ?>value="OLED3">OLED Type 3</option>
+            <option <?php if ($configmmdvm['General']['Display'] == "CAST") {echo 'selected="selected" ';}; ?>value="CAST">CAST</option>
 	    <option <?php if (($configmmdvm['General']['Display'] == "OLED") && ($configmmdvm['OLED']['Type'] == "6")) {echo 'selected="selected" ';}; ?>value="OLED6">OLED Type 6</option>
 	    <option <?php if ($configmmdvm['General']['Display'] == "Nextion") {echo 'selected="selected" ';}; ?>value="Nextion">Nextion</option>
 	    <option <?php if ($configmmdvm['General']['Display'] == "HD44780") {echo 'selected="selected" ';}; ?>value="HD44780">HD44780</option>
