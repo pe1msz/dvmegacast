@@ -43,7 +43,7 @@ sudo sed -i "/dvmegaVariant=/c\\dvmegaVariant=3" /etc/dstarrepeater
 sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway
 
 sudo cast-reset
-sudo gpio mode 10
+sudo gpio mode 10 in
 
        sudo systemctl start cron.service > /dev/null 2>/dev/null &                   #Cron
 
