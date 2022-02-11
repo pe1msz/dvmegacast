@@ -75,7 +75,6 @@ sed -i "/MMDVMHost/c MMDVMHost = $_MMDVMHostVer" /etc/pistar-release
 /usr/local/sbin/pistar-motdgen
 
 
-
 # castserialnew
 sudo systemctl start castserial.service
 # castudp
@@ -84,6 +83,9 @@ sudo systemctl start castudp.service
 
 # set the gpio to in on pin 10
 sudo gpio mode 10 in
+
+# set to base-radio after power-down (DC)
+sudo RMBS.sh
 
 
 # Shuffle the time for the daily crontab jobs
