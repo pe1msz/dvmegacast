@@ -55,6 +55,10 @@
 	sudo sed -i "/\[General\]/,/\[/ s/Id=.*$/Id=$2/1" /etc/mmdvmhost
 	sudo sed -i "/\[General\]/,/\[/ s/Display=.*$/Display=$3/1" /etc/mmdvmhost
 	sudo sed -i "/\[DMR\]/,/\[/ s/Id=.*$/Id=$2$5/1" /etc/mmdvmhost
+	sudo sed -i "/\[XLX Network 1\]/,/\[/ s/Id=.*$/Id=$2/1" /etc/dmrgateway
+	sudo sed -i "/\[DMR Network 1\]/,/\[/ s/Id=.*$/Id=$2$5/1" /etc/dmrgateway
+  	sudo sed -i "/\[DMR Network 2\]/,/\[/ s/Id=.*$/Id=$2$5/1" /etc/dmrgateway
+
 	
 	sudo sed -i "/\[D-Star\]/,/\[/ s/Module=.*$/Module=$4/1" /etc/mmdvmhost
 	sudo sed -i "s/repeaterBand1=.*/repeaterBand1=$4/1" /etc/ircddbgateway
