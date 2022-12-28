@@ -172,6 +172,7 @@ $MYCALL=strtoupper($callsign);
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="pragma" content="no-cache" />
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="css/nice-select.min.css?ver=<?php echo $configPistarRelease['Pi-Star']['Version']; ?>" />
     <meta http-equiv="Expires" content="0" />
     <title><?php echo "$MYCALL"." - ".$lang['digital_voice']." ".$lang['dashboard']." - ".$lang['configuration'];?></title>
     <link rel="stylesheet" type="text/css" href="css/pistar-css.php?version=0.95" />
@@ -233,7 +234,7 @@ if ( (file_exists('/etc/dstar-radio.mmdvmhost') && $configmmdvm['DMR']['Enable']
   </table>
 </div>
 <?php } 
-if ( ($configPistarRelease['Pi-Star']['Version'] >= "4.1") && ($configPistarRelease['Pi-Star']['Version'] < "4.1.5") ) {
+if ( ($configPistarRelease['Pi-Star']['Version'] >= "4.1") && ($configPistarRelease['Pi-Star']['Version'] < "4.1.6") ) {
 ?>
 <div>
   <table align="center" width="760px" style="margin: 0px 0px 10px 0px; width: 100%;">
@@ -243,6 +244,22 @@ if ( ($configPistarRelease['Pi-Star']['Version'] >= "4.1") && ($configPistarRele
   </table>
 </div>
 <?php } ?>
+<?php
+$bmAPIkeyFile = '/etc/bmapi.key';
+if (file_exists($bmAPIkeyFile) && fopen($bmAPIkeyFile,'r')) {
+  $configBMapi = parse_ini_file($bmAPIkeyFile, true);
+  $bmAPIkey = $configBMapi['key']['apikey'];
+  // Check the BM API Key
+  if ( strlen($bmAPIkey) <= 200 ) {
+?>
+<div>
+  <table align="center" width="760px" style="margin: 0px 0px 10px 0px; width: 100%;">
+    <tr>
+    <td align="center" valign="top" style="background-color: #ff9090; color: #f01010;">Alert: You have a BM API v1 Key, click here for the announcement: <a href="https://news.brandmeister.network/introducing-user-api-keys/" alt="BM API Keys">BM API Keys - Announcement</a>.</td>
+    </tr>
+  </table>
+</div>
+<?php } } ?>
 <div class="container">
 <div class="header">
 <div style="font-size: 8px; text-align: right; padding-right: 8px;">Pi-Star:<?php echo $configPistarRelease['Pi-Star']['Version']?> / <?php echo $lang['dashboard'].": ".$version; ?></div>
@@ -369,13 +386,13 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
           unset($_POST);
 
 	  // Over-write the config files with the clean copies
-	  exec('sudo unzip -o /var/cast/config_clean.zip -d /etc/');
-	  //exec('sudo rm -rf /etc/dstar-radio.*');
-	  //exec('sudo rm -rf /etc/pistar-css.ini');
+	  exec('sudo unzip -o /usr/local/bin/config_clean.zip -d /etc/');
+	  exec('sudo rm -rf /etc/dstar-radio.*');
+	  exec('sudo rm -rf /etc/pistar-css.ini');
 	  exec('sudo git --work-tree=/usr/local/sbin --git-dir=/usr/local/sbin/.git update-index --assume-unchanged pistar-upnp.service');
 	  exec('sudo git --work-tree=/usr/local/sbin --git-dir=/usr/local/sbin/.git reset --hard origin/master');
 	  exec('sudo git --work-tree=/usr/local/bin --git-dir=/usr/local/bin/.git reset --hard origin/master');
-	  //exec('sudo git --work-tree=/var/www/dashboard --git-dir=/var/www/dashboard/.git reset --hard origin/master');
+	  exec('sudo git --work-tree=/var/www/dashboard --git-dir=/var/www/dashboard/.git reset --hard origin/master');
           echo '<script type="text/javascript">setTimeout(function() { window.location=window.location;},5000);</script>';
 	  // Make the root filesystem read-only
           system('sudo sync && sudo sync && sudo sync && sudo mount -o remount,ro /');
@@ -1227,7 +1244,7 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 		}
 
 		// Set the DMR+ / HBLink Options= line
-		if ((substr($dmrMasterHostArr[3], 0, 4) == "DMR+") || (substr($dmrMasterHostArr[3], 0, 3) == "HB_") || (substr($dmrMasterHostArr[3], 0, 3) == "FD_") || (substr($dmrMasterHostArr[3], 0, 8) == "FreeDMR_")) {
+		if ((substr($dmrMasterHostArr[3], 0, 4) == "DMR+") || (substr($dmrMasterHostArr[3], 0, 3) == "HB_") || (substr($dmrMasterHostArr[3], 0, 3) == "FD_") || (substr($dmrMasterHostArr[3], 0, 8) == "FreeDMR_") || (substr($dmrMasterHostArr[3], 0, 9) == "FreeSTAR_")) {
 			unset ($configmmdvm['DMR Network']['Local']);
 			unset ($configmmdvm['DMR Network']['LocalPort']);
 			unset ($configysf2dmr['DMR Network']['Local']);
@@ -1821,6 +1838,29 @@ if ($_SERVER["PHP_SELF"] == "/admin/configure.php") {
 	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
 	    $configmmdvm['General']['Duplex'] = 0;
 	    $configmmdvm['DMR Network']['Slot1'] = 0;
+	    $configmmdvm['Modem']['Protocol'] = "uart";
+	    $configmmdvm['Modem']['UARTPort'] = $configmmdvm['Modem']['Port'];
+	  }
+
+	  if ( $confHardware == 'genesyshat' ) {
+	    $rollModemType = 'sudo sed -i "/modemType=/c\\modemType=MMDVM" /etc/dstarrepeater';
+	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
+	    system($rollModemType);
+	    system($rollRepeaterType1);
+	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+	    $configmmdvm['General']['Duplex'] = 0;
+	    $configmmdvm['DMR Network']['Slot1'] = 0;
+	    $configmmdvm['Modem']['Protocol'] = "uart";
+	    $configmmdvm['Modem']['UARTPort'] = $configmmdvm['Modem']['Port'];
+	  }
+
+	  if ( $confHardware == 'genesysdualhat' ) {
+	    $rollModemType = 'sudo sed -i "/modemType=/c\\modemType=MMDVM" /etc/dstarrepeater';
+	    $rollRepeaterType1 = 'sudo sed -i "/repeaterType1=/c\\repeaterType1=0" /etc/ircddbgateway';
+	    system($rollModemType);
+	    system($rollRepeaterType1);
+	    $configmmdvm['Modem']['Port'] = "/dev/ttyAMA0";
+	    $configmmdvm['General']['Duplex'] = 1;
 	    $configmmdvm['Modem']['Protocol'] = "uart";
 	    $configmmdvm['Modem']['UARTPort'] = $configmmdvm['Modem']['Port'];
 	  }
@@ -3584,14 +3624,12 @@ else:
     ?>
     <td>POCSAG Paging Features</td>
     </tr>
-
     <?php } ?>
     <tr>
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['mmdvm_display'];?>:<span><b>Display Type</b>Choose your display type, if you have one.</span></a></td>
     <td align="left" colspan="2"><select name="mmdvmDisplayType">
-	    <option <?php if (($configmmdvm['General']['Display'] == "None") || ($configmmdvm['General']['Display'] == "") ) {echo 'selected="selected" ';}; ?>value="None">None</option>
-            <option <?php if ($configmmdvm['General']['Display'] == "CAST") {echo 'selected="selected" ';}; ?>value="CAST">CAST</option>
-
+            <option <?php if (($configmmdvm['General']['Display'] == "None") || ($configmmdvm['General']['Display'] == "") ) {echo 'selected="selected" ';}; ?>value="None">None</option>
+	    <option <?php if (($configmmdvm['General']['Display'] == "CAST") || ($configmmdvm['General']['Display'] == "") ) {echo 'selected="selected" ';}; ?>value="CAST">CAST</option>
 	    <option <?php if (($configmmdvm['General']['Display'] == "OLED") && ($configmmdvm['OLED']['Type'] == "3")) {echo 'selected="selected" ';}; ?>value="OLED3">OLED Type 3</option>
 	    <option <?php if (($configmmdvm['General']['Display'] == "OLED") && ($configmmdvm['OLED']['Type'] == "6")) {echo 'selected="selected" ';}; ?>value="OLED6">OLED Type 6</option>
 	    <option <?php if ($configmmdvm['General']['Display'] == "Nextion") {echo 'selected="selected" ';}; ?>value="Nextion">Nextion</option>
@@ -3758,6 +3796,8 @@ else:
 	        <option<?php if ($configModem['Modem']['Hardware'] === 'mmdvmmdohat') {		echo ' selected="selected"';}?> value="mmdvmmdohat">MMDVM_HS_MDO Hat (BG3MDO) for Pi (GPIO)</option>
 	        <option<?php if ($configModem['Modem']['Hardware'] === 'mmdvmvyehat') {		echo ' selected="selected"';}?> value="mmdvmvyehat">MMDVM_HS_NPi Hat (VR2VYE) for Nano Pi (GPIO)</option>
 	        <option<?php if ($configModem['Modem']['Hardware'] === 'mmdvmvyehatdual') {	echo ' selected="selected"';}?> value="mmdvmvyehatdual">MMDVM_HS_Hat_Dual Hat (VR2VYE) for Pi (GPIO)</option>
+	        <option<?php if ($configModem['Modem']['Hardware'] === 'genesyshat') {		echo ' selected="selected"';}?> value="genesyshat">Genesis - HHDVM_HS_Hat for Pi (GPIO)</option>
+	        <option<?php if ($configModem['Modem']['Hardware'] === 'genesysdualhat') {	echo ' selected="selected"';}?> value="genesysdualhat">Genesis Dual - HHDVM_HS_Hat_Dual for Pi (GPIO)</option>
 	    	<option<?php if ($configModem['Modem']['Hardware'] === 'lshshatgpio') {		echo ' selected="selected"';}?> value="lshshatgpio">LoneStar - MMDVM_HS_Hat for Pi (GPIO)</option>
 	    	<option<?php if ($configModem['Modem']['Hardware'] === 'lshsdualhatgpio') {	echo ' selected="selected"';}?> value="lshsdualhatgpio">LoneStar - MMDVM_HS_Dual_Hat for Pi (GPIO)</option>
 	    	<option<?php if ($configModem['Modem']['Hardware'] === 'lsusb') {		echo ' selected="selected"';}?> value="lsusb">LoneStar - USB Stick</option>
@@ -3948,8 +3988,8 @@ else:
     <tr>
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['bm_network'];?>:<span><b>BrandMeister Dashboards</b>Direct links to your BrandMeister Dashboards</span></a></td>
     <td>
-      <a href="https://brandmeister.network/?page=hotspot&amp;id=<?php echo $configmmdvm['General']['Id']; ?>" target="_new" style="color: #000;">Repeater Information</a> |
-      <a href="https://brandmeister.network/?page=hotspot-edit&amp;id=<?php echo $configmmdvm['General']['Id']; ?>" target="_new" style="color: #000;">Edit Repeater (BrandMeister Selfcare)</a>
+      <a href="https://brandmeister.network/?page=device&amp;id=<?php if (isset($configdmrgateway['DMR Network 1']['Id'])) { echo $configdmrgateway['DMR Network 1']['Id']; } else { echo $configmmdvm['General']['Id']; } ?>" target="_new" style="color: #000;">Device Information</a> |
+      <a href="https://brandmeister.network/?page=device-edit&amp;id=<?php if (isset($configdmrgateway['DMR Network 1']['Id'])) { echo $configdmrgateway['DMR Network 1']['Id']; } else { echo $configmmdvm['General']['Id']; } ?>" target="_new" style="color: #000;">Edit Device (BrandMeister Selfcare)</a>
     </td>
     </tr>
     <tr>
@@ -3973,7 +4013,7 @@ else:
     <tr>
     <td align="left"><a class="tooltip2" href="#"><?php echo $lang['dmr_plus_network'];?>:<span><b>DMR+ Network</b>Set your options= for DMR+ here</span></a></td>
     <td align="left">
-    Options=<input type="text" name="dmrNetworkOptions" size="65" maxlength="100" value="<?php if (isset($configdmrgateway['DMR Network 2']['Options'])) { echo $configdmrgateway['DMR Network 2']['Options']; } ?>" />
+    Options=<input type="text" name="dmrNetworkOptions" size="65" maxlength="250" value="<?php if (isset($configdmrgateway['DMR Network 2']['Options'])) { echo $configdmrgateway['DMR Network 2']['Options']; } ?>" />
     </td>
     </tr>
     <tr>
@@ -4125,15 +4165,15 @@ else:
     <tr>
     <td align="left"><a class="tooltip2" href="#">'.$lang['bm_network'].':<span><b>BrandMeister Dashboards</b>Direct links to your BrandMeister Dashboards</span></a></td>
     <td>
-      <a href="https://brandmeister.network/?page=hotspot&amp;id='.$configmmdvm['General']['Id'].'" target="_new" style="color: #000;">Repeater Information</a> |
-      <a href="https://brandmeister.network/?page=hotspot-edit&amp;id='.$configmmdvm['General']['Id'].'" target="_new" style="color: #000;">Edit Repeater (BrandMeister Selfcare)</a>
+      <a href="https://brandmeister.network/?page=device&amp;id='; if (isset($configmmdvm['DMR']['Id'])) { echo $configmmdvm['DMR']['Id']; } else { echo $configmmdvm['General']['Id']; }; echo '" target="_new" style="color: #000;">Device Information</a> |
+      <a href="https://brandmeister.network/?page=device-edit&amp;id='; if (isset($configmmdvm['DMR']['Id'])) { echo $configmmdvm['DMR']['Id']; } else { echo $configmmdvm['General']['Id']; }; echo '" target="_new" style="color: #000;">Edit Device (BrandMeister Selfcare)</a>
     </td>
     </tr>'."\n";}
     if (substr($dmrMasterNow, 0, 8) == "FreeDMR_") {
       echo '    <tr>
     <td align="left"><a class="tooltip2" href="#">DMR Options:<span><b>DMR Network</b>Set your options= for DMR here</span></a></td>
     <td align="left">
-    Options=<input type="text" name="dmrNetworkOptions" size="65" maxlength="100" value="';
+    Options=<input type="text" name="dmrNetworkOptions" size="65" maxlength="250" value="';
 	if (isset($configmmdvm['DMR Network']['Options'])) { echo $configmmdvm['DMR Network']['Options']; }
         echo '" />
     </td>
@@ -4145,11 +4185,11 @@ else:
       <a href="http://www.freedmr.uk/index.php/dashboard/options-calculator/" target="_new" style="color: #000;">FreeDMR Options Calculator</a>
     </td>
     </tr>'."\n";}
-    if ((substr($dmrMasterNow, 0, 4) == "DMR+") || (substr($dmrMasterNow, 0, 3) == "HB_") || (substr($dmrMasterNow, 0, 3) == "FD_")) {
+    if ((substr($dmrMasterNow, 0, 4) == "DMR+") || (substr($dmrMasterNow, 0, 3) == "HB_") || (substr($dmrMasterNow, 0, 3) == "FD_") || (substr($dmrMasterNow, 0, 9) == "FreeSTAR_")) {
       echo '    <tr>
     <td align="left"><a class="tooltip2" href="#">DMR Options:<span><b>DMR Network</b>Set your options= for DMR here</span></a></td>
     <td align="left">
-    Options=<input type="text" name="dmrNetworkOptions" size="65" maxlength="100" value="';
+    Options=<input type="text" name="dmrNetworkOptions" size="65" maxlength="250" value="';
 	if (isset($configmmdvm['DMR Network']['Options'])) { echo $configmmdvm['DMR Network']['Options']; }
         echo '" />
     </td>
@@ -4167,8 +4207,7 @@ else:
 <?php if ($dmrMasterNow !== "DMRGateway") { ?>
     <tr>
     <td align="left"><a class="tooltip2" href="#">DMR ESSID:<span><b>DMR Extended ID</b>This is the extended ID, to make your DMR ID 8 or 9 digits long</span></a></td>
-    <td align="left">
-<?php
+    <td align="left"><?php
 	if (isset($configmmdvm['DMR']['Id'])) {
 		if (strlen($configmmdvm['DMR']['Id']) > strlen($configmmdvm['General']['Id'])) {
 			$essidLen = strlen($configmmdvm['DMR']['Id']) - strlen($configmmdvm['General']['Id']);
@@ -4979,6 +5018,19 @@ Get your copy of Pi-Star from <a style="color: #ffffff;" href="http://www.pistar
 <br />
 </div>
 </div>
+<script type="text/javascript" src="/nice-select.min.js"></script>
+<script type="text/javascript">
+    var selectize = document.querySelectorAll('select')
+    var options = {searchable: true};
+    selectize.forEach(function(select){
+        if( select.length > 30 && null === select.onchange && !select.name.includes("ExtendedId") ) {
+            select.classList.add("small", "selectize");
+            tabletd = select.closest('td');
+            tabletd.style.cssText = 'overflow-x:unset';
+            NiceSelect.bind(select, options);
+        }
+    });
+</script>
 </body>
 </html>
 
@@ -4993,6 +5045,19 @@ Get your copy of Pi-Star from <a style="color: #ffffff;" href="http://www.pistar
 <br />
 </div>
 </div>
+<script type="text/javascript" src="/nice-select.min.js"></script>
+<script type="text/javascript">
+    var selectize = document.querySelectorAll('select')
+    var options = {searchable: true};
+    selectize.forEach(function(select){
+        if( select.length > 30 && null === select.onchange && !select.name.includes("ExtendedId") ) {
+            select.classList.add("small", "selectize");
+            tabletd = select.closest('td');
+            tabletd.style.cssText = 'overflow-x:unset';
+            NiceSelect.bind(select, options);
+        }
+    });
+</script>
 </body>
 </html>
 <?php } ?>
