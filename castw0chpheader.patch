@@ -1,0 +1,11 @@
+--- header-menu.org	2023-02-07 10:14:38.378358054 +0100
++++ header-menu.inc	2023-02-07 10:16:55.826344319 +0100
+@@ -133,6 +133,8 @@
+ 			<!-- Services Sub -->
+ 			<li class="subs has-subs"><a href="#">Pi-Star Services</a>
+ 			    <ul class="dropdown">
++                                <li class="subs"><a href="/admin/fw/index.php">FW</a></li>
++                                <li class="subs"><a href="/admin/memlist/memlist.php">Memorylist</a></li>
+ 				<li class="subs"><a href="services.php?action=stop">Stop Services</a></li>
+ 				<li class="subs"><a href="services.php?action=fullstop">Full Stop Services</a></li>
+ 				<li class="subs"><a href="services.php?action=restart">Restart Services</a></li>

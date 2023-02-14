@@ -1,10 +1,19 @@
-#bin
-#bash
+#bin#bash
 
 sudo mount -o remount,rw /
 
-sudo unzip -o /var/cast/fwfolder.zip -d /var/www/dashboard/admin/
-sudo unzip -o /var/cast/meml.zip -d /var/www/dashboard/admin/
+FILE=/var/cast/w0chp.txt
+if [ -f "$FILE" ]; then
+    sudo patch /var/www/dashboard/admin/configure.php /var/cast/castw0chpconf.patch
+    sudo patch /var/www/dashboard/admin/advanced/header-menu.inc /var/cast/castw0chpheader.patch
+else 
+    sudo patch /var/www/dashboard/admin/configure.php /var/cast/castconf.patch
+    sudo patch /var/www/dashboard/admin/expert/header-menu.inc /var/cast/castheader.patch
+
+fi
+
+#sudo patch /var/www/dashboard/admin/configure.php /var/www/dashboard/admin/castw0chpconf.patch
+#sudo patch /var/www/dashboard/admin/expert/header-menu.inc /var/www/dashboard/admin/expert/castw0chpheader.patch
 sudo cp /var/cast/check_update.php /var/www/dashboard/admin/fw
 sudo cp /var/cast/confirm_main.html /var/www/dashboard/admin/fw
 sudo cp /var/cast/confirm_radio.html /var/www/dashboard/admin/fw
