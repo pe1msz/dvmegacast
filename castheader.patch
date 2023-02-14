@@ -1,0 +1,13 @@
+--- header-menu.org	2023-02-14 09:41:33.329521403 +0100
++++ header-menu.inc	2023-02-14 09:41:52.556905895 +0100
+@@ -7,7 +7,9 @@
+     <a href="/admin/update.php" style="color: #ffffff;"><?php echo $lang['update'];?></a> |
+     <a href="/admin/expert/upgrade.php" style="color: #ffffff;">Upgrade</a> |
+     <a href="/admin/config_backup.php" style="color: #ffffff;"><?php echo $lang['backup_restore'];?></a> |
+-    <a href="/admin/configure.php" style="color: #ffffff;"><?php echo $lang['configuration'];?></a>
++    <a href="/admin/configure.php" style="color: #ffffff;"><?php echo $lang['configuration'];?></a> |
++    <a href="/admin/fw/index.php" style="color: #ffffff;"><?php echo $lang['fw'];?></a> |
++    <a href="/admin/memlist/memlist.php" style="color: #ffffff;"><?php echo $lang['mem_list'];?></a>
+   </p>
+   <p style="padding-right: 5px; text-align: right; color: #ffffff;">
+     <b>Quick Edit:</b>
