@@ -10,6 +10,6 @@
             fi
 
 
-sudo cast-reset
+//sudo cast-reset
 sudo gpio mode 10 in
 
