@@ -21,6 +21,9 @@ sudo cp /var/cast/confirm_display.html /var/www/dashboard/admin/fw
 sudo cp /var/cast/index.php /var/www/dashboard/admin/fw
 sudo cp /var/cast/configure.php /var/www/dashboard/admin
 sudo cp /var/cast/header-menu.inc /var/www/dashboard/admin/expert
+sudo cp /var/cast/finish.php /var/www/dashboard/admin/fw
+sudo cp /var/cast/flash_cast.sh /var/www/dashboard/admin/fw/cast
+sudo cp /var/cast/flash_next.sh /var/www/dashboard/admin/fw/nextion
 sudo chown -R www-data:www-data /var/www/dashboard/admin/fw
 sudo chmod +x -R /var/www/dashboard/admin/fw
 sudo unzip -o /var/cast/lang.zip -d /var/www/dashboard/admin/lang

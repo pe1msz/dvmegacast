@@ -4,6 +4,6 @@ input="/home/pi-star/config.txt"
 while IFS= read -r line
 do
 ((i=i+1))
-  sudo echo -n  "$line" >/dev/udp/127.0.0.1/40095
+  sudo echo -n  $line >/dev/udp/127.0.0.1/40095
 done < "$input"
 
