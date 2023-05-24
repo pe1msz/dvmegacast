@@ -1,6 +1,13 @@
 #bin#bash
 
 sudo mount -o remount,rw /
+FILE=/home/pi-star/config.txt
+if [ ! -f "$FILE" ]; then
+sudo cp /var/cast/config.txt /home/pi-star/config.txt
+sudo cp /var/cast/settings.txt /home/pi-star/settings.txt
+fi
+
+
 
 FILE=/var/cast/w0chp.txt
 if [ -f "$FILE" ]; then

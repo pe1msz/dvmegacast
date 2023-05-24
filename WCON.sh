@@ -15,8 +15,8 @@
         sudo systemctl stop cron.service > /dev/null 2>/dev/null &                   #Cron
 
 
-       echo $1 > $FILE
- 
+        echo $1 > $FILE
+ 	sed -i 's/^\(.\{30\}\).*$/\1/' $FILE    #Cut at max length to remove unwanted buffer stuff
 
 	sudo systemctl start cron.service > /dev/null 2>/dev/null &                   #Cron
 
