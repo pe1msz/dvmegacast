@@ -31,4 +31,5 @@ sudo cp /var/cast/*.sh /usr/local/sbin
 sudo cp /var/cast/rc.local /etc
 sudo cp /var/cast/interfaces /etc/network
 sudo cp /var/cast/memlist.php /var/www/dashboard/admin/memlist
-
+sudo chown root:root /usr/local/sbin/W*
+sudo chmod 777 /usr/local/sbin/W*
