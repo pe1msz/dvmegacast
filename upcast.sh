@@ -5,6 +5,7 @@ FILE=/home/pi-star/config.txt
 if [ ! -f "$FILE" ]; then
 sudo cp /var/cast/config.txt /home/pi-star/config.txt
 sudo cp /var/cast/settings.txt /home/pi-star/settings.txt
+sudo chmod +w /var/cast/*.txt
 fi
 
 
