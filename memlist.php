@@ -227,7 +227,7 @@ require_once('../config/version.php');
   $names=file($fileLocation);
   echo  "<tr><h3>Stored memory list (". count($names) . "/25)";
   if(count($names) > 24) echo " Memory full !";
-  copy($names,'/home/pi-star/castmemlist.txt);
+  //echo copy($names,'/home/pi-star/castmemlist.txt);
 
   echo "</h3></tr> <BR>";
 
