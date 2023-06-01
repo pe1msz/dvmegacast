@@ -41,3 +41,5 @@ sudo cp /var/cast/interfaces /etc/network
 sudo cp /var/cast/memlist.php /var/www/dashboard/admin/memlist
 sudo chown root:root /usr/local/sbin/W*
 sudo chmod 777 /usr/local/sbin/W*
+sudo chown pi-star:pi-star /home/pi-star/*
+
