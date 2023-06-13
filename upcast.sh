@@ -20,7 +20,7 @@ else
 
 fi
 sudo systemctl stop castudp.service > /dev/null 2>/dev/null 
-sudo cp castudp /usr/local/sbin
+sudo cp /var/cast/castudp /usr/local/sbin
 sudo systemctl start castserial.service > /dev/null 2>/dev/null &
 
 
