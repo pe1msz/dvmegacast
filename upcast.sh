@@ -22,7 +22,7 @@ fi
 
 sudo systemctl stop castudp
 sudo cp castudp /usr/local/sbin
-sudo systemctl castudp
+sudo systemctl start castudp
 
 #sudo patch /var/www/dashboard/admin/configure.php /var/www/dashboard/admin/castw0chpconf.patch
 #sudo patch /var/www/dashboard/admin/expert/header-menu.inc /var/www/dashboard/admin/expert/castw0chpheader.patch
