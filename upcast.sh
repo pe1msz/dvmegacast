@@ -21,7 +21,7 @@ else
 fi
 sudo systemctl stop castudp.service > /dev/null 2>/dev/null 
 sudo cp /var/cast/castudp /usr/local/sbin
-sudo systemctl start castserial.service > /dev/null 2>/dev/null &
+sudo systemctl start castudp.service > /dev/null 2>/dev/null &
 
 
 #sudo patch /var/www/dashboard/admin/configure.php /var/www/dashboard/admin/castw0chpconf.patch
@@ -46,4 +46,5 @@ sudo cp /var/cast/memlist.php /var/www/dashboard/admin/memlist
 sudo chown root:root /usr/local/sbin/W*
 sudo chmod 777 /usr/local/sbin/W*
 sudo chown pi-star:pi-star /home/pi-star/*
+sudo systemctl start castudp.service > /dev/null 2>/dev/null &
 
