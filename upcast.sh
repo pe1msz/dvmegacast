@@ -19,10 +19,10 @@ else
     sudo patch /var/www/dashboard/admin/expert/header-menu.inc /var/cast/castheader.patch
 
 fi
-
-sudo systemctl stop castudp
+sudo systemctl stop castudp.service > /dev/null 2>/dev/null &
 sudo cp castudp /usr/local/sbin
-sudo systemctl start castudp
+sudo systemctl start castserial.service > /dev/null 2>/dev/null &
+
 
 #sudo patch /var/www/dashboard/admin/configure.php /var/www/dashboard/admin/castw0chpconf.patch
 #sudo patch /var/www/dashboard/admin/expert/header-menu.inc /var/www/dashboard/admin/expert/castw0chpheader.patch
