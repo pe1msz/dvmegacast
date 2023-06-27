@@ -5,12 +5,14 @@ FILE=/home/pi-star/config.txt
 if [ ! -f "$FILE" ]; then
 sudo cp /var/cast/config.txt /home/pi-star/config.txt
 sudo cp /var/cast/settings.txt /home/pi-star/settings.txt
-sudo cp /var/cast/preset.txt /home/pi-star/starpre.txt
+fi
+FILE=/home/pi-star/dstarpre.txt
+if [ ! -f "$FILE" ]; then
+sudo cp /var/cast/preset.txt /home/pi-star/dstarpre.txt
 sudo cp /var/cast/preset.txt /home/pi-star/dmrpre.txt
 sudo cp /var/cast/preset.txt /home/pi-star/ysfpre.txt
-
-sudo chmod +w /var/cast/*.txt
 fi
+sudo chmod +w /var/cast/*.txt
 
 
 
