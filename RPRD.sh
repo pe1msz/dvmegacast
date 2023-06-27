@@ -1,5 +1,5 @@
 #!/bin/bash
-input="/home/pi-star/dstarpre.txt"
+input="/home/pi-star/dmrpre.txt"
 ((i = 0))
 while IFS= read -r line
 do
