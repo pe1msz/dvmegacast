@@ -8,9 +8,9 @@ sudo cp /var/cast/settings.txt /home/pi-star/settings.txt
 fi
 FILE=/home/pi-star/dstarpre.txt
 if [ ! -f "$FILE" ]; then
-sudo cp /var/cast/preset.txt /home/pi-star/dstarpre.txt
-sudo cp /var/cast/preset.txt /home/pi-star/dmrpre.txt
-sudo cp /var/cast/preset.txt /home/pi-star/ysfpre.txt
+sudo cp /var/cast/dstarpre.txt /home/pi-star/dstarpre.txt
+sudo cp /var/cast/dmrpre.txt /home/pi-star/dmrpre.txt
+sudo cp /var/cast/ysfpre.txt /home/pi-star/ysfpre.txt
 fi
 sudo chmod +w /var/cast/*.txt
 
