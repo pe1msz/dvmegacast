@@ -13,13 +13,15 @@ sudo cp /var/cast/dmrpre.txt /home/pi-star/dmrpre.txt
 sudo cp /var/cast/ysfpre.txt /home/pi-star/ysfpre.txt
 fi
 sudo chmod +w /var/cast/*.txt
-
+sudo cp /var/cast/flash_next.sh /var/www/dashboard/admin/fw/nextion
 
 
 FILE=/var/cast/w0chp.txt
 if [ -f "$FILE" ]; then
     sudo patch /var/www/dashboard/admin/configure.php /var/cast/castw0chpconf.patch
     sudo patch /var/www/dashboard/admin/advanced/header-menu.inc /var/cast/castw0chpheader.patch
+    sudo patch /var/www/dashboard/admin/fw/nextion/flash_next.sh /var/cast/flashnext.patch
+    sudo cp /var/cast/nextionupload.py /var/www/dashboard/admin/fw/nextion
 else 
     sudo patch /var/www/dashboard/admin/configure.php /var/cast/castconf.patch
     sudo patch /var/www/dashboard/admin/expert/header-menu.inc /var/cast/castheader.patch
@@ -41,7 +43,7 @@ sudo cp /var/cast/configure.php /var/www/dashboard/admin
 sudo cp /var/cast/header-menu.inc /var/www/dashboard/admin/expert
 sudo cp /var/cast/finish.php /var/www/dashboard/admin/fw
 sudo cp /var/cast/flash_cast.sh /var/www/dashboard/admin/fw/cast
-sudo cp /var/cast/flash_next.sh /var/www/dashboard/admin/fw/nextion
+#sudo cp /var/cast/flash_next.sh /var/www/dashboard/admin/fw/nextion
 sudo chown -R www-data:www-data /var/www/dashboard/admin/fw
 sudo chmod +x -R /var/www/dashboard/admin/fw
 sudo unzip -o /var/cast/lang.zip -d /var/www/dashboard/admin/lang

@@ -1,0 +1,13 @@
+--- flash_next.org	2023-07-13 10:51:03.784877910 +0200
++++ flash_next.sh	2023-07-13 10:51:27.135971496 +0200
+@@ -23,8 +23,8 @@
+   echo "Found $found firmware..."
+ 
+   case ${found} in
+-    (*F024*)  python ./nextion/nextionupload.py /dev/ttyAMA0 NX3224F024 ${found};;
+-    (*T024*)  python ./nextion/nextionupload.py /dev/ttyAMA0 NX3224T024 ${found};;
++    (*F024*)  python3 ./nextion/nextionupload.py /dev/ttyAMA0 NX3224F024 ${found};;
++    (*T024*)  python3 ./nextion/nextionupload.py /dev/ttyAMA0 NX3224T024 ${found};;
+ 
+   esac
+ 
