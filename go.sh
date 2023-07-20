@@ -2,6 +2,6 @@
 
 sudo mount -o remount,rw /
 sudo CAST.sh
-sleep 2
+sleep 5
 sudo upcast.sh
 
