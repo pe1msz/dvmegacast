@@ -50,8 +50,10 @@
 	sudo sed -i "/\[DMR\]/,/\[/ s/Id=.*$/Id=$2/1" /etc/ysfgateway
 	sudo sed -i "/\[Info\]/,/\[/ s/Name=.*$/Name=$1_DVMEGA-CAST/1" /etc/ysfgateway
 	sudo sed -i "/\[APRS\]/,/\[/ s/Sescription=.*$/Description=$1_DVMEGA-CAST_ND/1" /etc/ysfgateway
-	sudo sed -i "s/callsign=.*/callsign=$1 $4/1" /etc/dstarrepeater
-	sudo sed -i "s/gateway=.*/gateway=$1 G/1" /etc/dstarrepeater
+        fullcall=$(printf "%-7s" "$1")"$4"
+	sudo sed -i "s/callsign=.*/callsign=$fullcall /1" /etc/dstarrepeater
+	fullcall=$(printf "%-7s" "$1")"G"
+	sudo sed -i "s/gateway=.*/gateway=$fullcall /1" /etc/dstarrepeater
 	sudo sed -i "/\[General\]/,/\[/ s/Id=.*$/Id=$2/1" /etc/mmdvmhost
 	sudo sed -i "/\[General\]/,/\[/ s/Display=.*$/Display=$3/1" /etc/mmdvmhost
 	sudo sed -i "/\[DMR\]/,/\[/ s/Id=.*$/Id=$2$5/1" /etc/mmdvmhost
