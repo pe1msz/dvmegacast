@@ -81,7 +81,7 @@
 
 
 sudo cast-reset
-
+sudo gpio mode 10 in
        sudo systemctl start cron.service > /dev/null 2>/dev/null &                   #Cron
 
 
