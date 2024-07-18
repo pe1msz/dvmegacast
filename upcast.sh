@@ -54,5 +54,6 @@ sudo cp /var/cast/memlist.php /var/www/dashboard/admin/memlist
 sudo chown root:root /usr/local/sbin/W*
 sudo chmod 777 /usr/local/sbin/W*
 sudo chown pi-star:pi-star /home/pi-star/*
+sudo sed -i "/\[Transparent Data\]/,/\[/ s/SendFrameType=.*$/SendFrameType=0/1" /etc/mmdvmhost
 sudo systemctl start castudp.service > /dev/null 2>/dev/null &
 
